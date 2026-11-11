@@ -27,6 +27,12 @@ public class BankController {
             model.addAttribute("transferRequest", new TransferRequest());
         return "bank";
     }
+    @GetMapping("/large-transfers")
+    public String largeTransfers(@RequestParam(defaultValue = "10000") BigDecimal min, Model model) {
+    model.addAttribute("min", min);
+    model.addAttribute("transactions", bankService.largeTransfers(min));
+    return "large";
+    }
 
     @PostMapping("/customers")
     public String addCustomer(@RequestParam String accountNumber, @RequestParam String fullName,
@@ -62,11 +68,39 @@ public class BankController {
             return "bank";
         }
     }
+    @PostMapping("/deposit")
+    public String deposit(@RequestParam String account,
+                        @RequestParam BigDecimal amount,
+                        RedirectAttributes ra) {
+        try {
+            bankService.deposit(account, amount);
+            ra.addFlashAttribute("success", "Deposit of LKR " + amount + " completed");
+        } catch (Exception e) {
+            auditService.recordFailure(null, account, amount, e.getMessage());
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/withdraw")
+    public String withdraw(@RequestParam String account,
+                        @RequestParam BigDecimal amount,
+                        RedirectAttributes ra) {
+        try {
+            bankService.withdraw(account, amount);
+            ra.addFlashAttribute("success", "Withdrawal of LKR " + amount + " completed");
+        } catch (Exception e) {
+            auditService.recordFailure(account, null, amount, e.getMessage());
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/";
+    }
 
     @GetMapping("/accounts/{accountNumber}/history")
     public String history(@PathVariable String accountNumber, Model model) {
         model.addAttribute("customer", bankService.getCustomer(accountNumber));
         model.addAttribute("transactions", bankService.history(accountNumber));
+        model.addAttribute("totalSent", bankService.totalSent(accountNumber));
         return "history";
     }
 

@@ -5,6 +5,8 @@ import com.example.bank_transfer_app.model.TransactionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface BankTransactionRepository extends JpaRepository<BankTransaction, Long> {
@@ -21,4 +23,11 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
 
     @Query("SELECT COUNT(t) FROM BankTransaction t WHERE t.status = :status")
     long countByStatus(@Param("status") TransactionStatus status);
+
+    @Query("SELECT t FROM BankTransaction t WHERE t.amount > :min ORDER BY t.amount DESC")
+    List<BankTransaction> findLargeTransfers(@Param("min") BigDecimal min);
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM BankTransaction t " +
+       "WHERE t.fromAccount = :account AND t.status = :status")
+    BigDecimal totalSent(@Param("account") String account, @Param("status") TransactionStatus status);
 }

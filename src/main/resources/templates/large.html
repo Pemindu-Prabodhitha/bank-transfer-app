@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Transfers above LKR ${min}</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar"><h1>Transfers above LKR ${min}</h1></header>
+<main>
+  <a th:href="@{/}">&larr; Back to dashboard</a>
+  <table>
+    <tr><th>ID</th><th>Time</th><th>From</th><th>To</th><th>Amount</th><th>Status</th><th>Description</th></tr>
+    <tr th:each="t : ${transactions}">
+      <td th:text="${t.id}"></td>
+      <td th:text="${#temporals.format(t.createdAt,'yyyy-MM-dd HH:mm:ss')}"></td>
+      <td th:text="${t.fromAccount}"></td>
+      <td th:text="${t.toAccount}"></td>
+      <td th:text="${t.amount}"></td>
+      <td th:text="${t.status}" th:class="${t.status.name() == 'SUCCESS'} ? 'ok' : 'bad'"></td>
+      <td th:text="${t.description}"></td>
+    </tr>
+  </table>
+</main>
+</body>
+</html>

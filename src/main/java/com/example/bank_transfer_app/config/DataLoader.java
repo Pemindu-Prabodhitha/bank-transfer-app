@@ -19,6 +19,7 @@ public class DataLoader implements CommandLineRunner {
             repo.save(new Customer("100001", "Pemindu Prabodhitha", "pemindu@example.com", new BigDecimal("50000.00")));
             repo.save(new Customer("100002", "Dananja Milindu", "dananja@example.com", new BigDecimal("25000.00")));
             repo.save(new Customer("100003", "Chamuditha Kasun", "chamuditha@example.com", new BigDecimal("10000.00")));
+            repo.save(new Customer("999999", "Bank Fees", "fees@bank.com", BigDecimal.ZERO));
         }
     }
 }

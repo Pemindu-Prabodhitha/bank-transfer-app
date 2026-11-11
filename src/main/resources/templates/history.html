@@ -11,6 +11,7 @@
   <a th:href="@{/}">&larr; Back to dashboard</a>
   <h2><span th:text="${customer.fullName}"></span> (<span th:text="${customer.accountNumber}"></span>)</h2>
   <p>Balance: LKR <b th:text="${customer.balance}"></b></p>
+  <p>Total sent: LKR <b th:text="${totalSent}"></b></p>
   <table>
     <tr><th>ID</th><th>Time</th><th>From</th><th>To</th><th>Amount</th><th>Status</th><th>Description</th></tr>
     <tr th:each="t : ${transactions}">
