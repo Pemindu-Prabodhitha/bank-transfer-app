@@ -27,6 +27,12 @@ public class BankController {
             model.addAttribute("transferRequest", new TransferRequest());
         return "bank";
     }
+    @GetMapping("/large-transfers")
+    public String largeTransfers(@RequestParam(defaultValue = "10000") BigDecimal min, Model model) {
+    model.addAttribute("min", min);
+    model.addAttribute("transactions", bankService.largeTransfers(min));
+    return "large";
+    }
 
     @PostMapping("/customers")
     public String addCustomer(@RequestParam String accountNumber, @RequestParam String fullName,
