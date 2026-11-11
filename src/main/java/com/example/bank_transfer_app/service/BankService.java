@@ -25,7 +25,9 @@ public class BankService {
     public List<BankTransaction> largeTransfers(BigDecimal min) {
     return transactionRepository.findLargeTransfers(min);
     }
-
+    public BigDecimal totalSent(String account) {
+    return transactionRepository.totalSent(account, TransactionStatus.SUCCESS);
+    }
     public List<Customer> getCustomers(String keyword) {
         return (keyword == null || keyword.isBlank())
                 ? customerRepository.findAllOrdered()

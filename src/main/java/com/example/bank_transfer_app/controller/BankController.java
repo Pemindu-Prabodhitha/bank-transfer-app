@@ -73,6 +73,7 @@ public class BankController {
     public String history(@PathVariable String accountNumber, Model model) {
         model.addAttribute("customer", bankService.getCustomer(accountNumber));
         model.addAttribute("transactions", bankService.history(accountNumber));
+        model.addAttribute("totalSent", bankService.totalSent(accountNumber));
         return "history";
     }
 

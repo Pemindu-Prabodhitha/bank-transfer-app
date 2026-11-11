@@ -26,4 +26,8 @@ public interface BankTransactionRepository extends JpaRepository<BankTransaction
 
     @Query("SELECT t FROM BankTransaction t WHERE t.amount > :min ORDER BY t.amount DESC")
     List<BankTransaction> findLargeTransfers(@Param("min") BigDecimal min);
+
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM BankTransaction t " +
+       "WHERE t.fromAccount = :account AND t.status = :status")
+    BigDecimal totalSent(@Param("account") String account, @Param("status") TransactionStatus status);
 }
