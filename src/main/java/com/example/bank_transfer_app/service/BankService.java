@@ -28,6 +28,18 @@ public class BankService {
     public BigDecimal totalSent(String account) {
     return transactionRepository.totalSent(account, TransactionStatus.SUCCESS);
     }
+    @Transactional(rollbackFor = Exception.class)
+    public BankTransaction deposit(String acc, BigDecimal amount) {
+        if (customerRepository.credit(acc, amount) == 0) throw new AccountNotFoundException(acc);
+        return transactionRepository.save(new BankTransaction(null, acc, amount, TransactionStatus.SUCCESS, "Deposit"));
+    }
+
+@   Transactional(rollbackFor = Exception.class)
+    public BankTransaction withdraw(String acc, BigDecimal amount) {
+        if (customerRepository.debit(acc, amount) == 0) throw new InsufficientBalanceException(acc);
+        return transactionRepository.save(new BankTransaction(acc, null, amount, TransactionStatus.SUCCESS, "Withdrawal"));
+    }
+
     public List<Customer> getCustomers(String keyword) {
         return (keyword == null || keyword.isBlank())
                 ? customerRepository.findAllOrdered()

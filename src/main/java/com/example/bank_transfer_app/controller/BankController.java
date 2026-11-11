@@ -68,6 +68,33 @@ public class BankController {
             return "bank";
         }
     }
+    @PostMapping("/deposit")
+    public String deposit(@RequestParam String account,
+                        @RequestParam BigDecimal amount,
+                        RedirectAttributes ra) {
+        try {
+            bankService.deposit(account, amount);
+            ra.addFlashAttribute("success", "Deposit of LKR " + amount + " completed");
+        } catch (Exception e) {
+            auditService.recordFailure(null, account, amount, e.getMessage());
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/";
+    }
+
+    @PostMapping("/withdraw")
+    public String withdraw(@RequestParam String account,
+                        @RequestParam BigDecimal amount,
+                        RedirectAttributes ra) {
+        try {
+            bankService.withdraw(account, amount);
+            ra.addFlashAttribute("success", "Withdrawal of LKR " + amount + " completed");
+        } catch (Exception e) {
+            auditService.recordFailure(account, null, amount, e.getMessage());
+            ra.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/";
+    }
 
     @GetMapping("/accounts/{accountNumber}/history")
     public String history(@PathVariable String accountNumber, Model model) {
